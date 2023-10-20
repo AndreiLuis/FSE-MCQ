@@ -1,0 +1,31 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/policy/{version}/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 32778
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/policy{version}/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/user/{version}/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 32774
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/user/{version}/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseURI": "https://localhost:32776"
+  }                                                                                 
+}
