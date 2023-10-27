@@ -1,0 +1,17 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/v1.0/policy/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "Policy.Api",
+          "Port": 7055
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/v1.0/policy/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ],
+      "SwaggerKey": "policy"
+    }
+  ]
+}

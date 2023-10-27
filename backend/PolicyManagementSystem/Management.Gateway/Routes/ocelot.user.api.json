@@ -1,0 +1,17 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/v1.0/user/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "User.Api",
+          "Port": 7147
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/v1.0/user/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ],
+      "SwaggerKey": "user"
+    }
+  ]
+}

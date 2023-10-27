@@ -1,5 +1,8 @@
+using Microsoft.Extensions.DependencyInjection;
+using MMLib.SwaggerForOcelot.DependencyInjection;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Values;
 
 new WebHostBuilder()
             .UseKestrel(options =>
@@ -16,12 +19,18 @@ new WebHostBuilder()
                     .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
                     .AddJsonFile("appsettings.json", true, true)
                     .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
-                    .AddJsonFile("ocelot.json")
-                    .AddEnvironmentVariables();
+                    //.AddJsonFile("ocelot.json")
+                    .AddEnvironmentVariables()
+                    .AddOcelotWithSwaggerSupport(option =>
+                    {
+                        option.Folder = "Routes";
+                    });
             })
-            .ConfigureServices(s => {
-                s.AddOcelot();
-                //s.AddSwaggerForOcelot(s.Configuration);
+            .ConfigureServices(service => {
+                service.AddOcelot();
+                service.AddSwaggerForOcelot(service.BuildServiceProvider().GetService<IConfiguration>());
+                //service.AddSwaggerGen();
+                service.AddMvcCore().AddApiExplorer();
             })
             .ConfigureLogging((hostingContext, logging) =>
             {
@@ -31,9 +40,9 @@ new WebHostBuilder()
             .Configure(app =>
             {
                 app.UseOcelot().Wait();
-                app.UseSwaggerForOcelotUI(opt =>
+                app.UseSwaggerForOcelotUI(option =>
                 {
-                    opt.PathToSwaggerGenerator = "/swagger/docs";
+                    option.PathToSwaggerGenerator = "/swagger/docs";
                 });
             })
             .Build()

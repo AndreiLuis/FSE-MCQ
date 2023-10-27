@@ -1,0 +1,35 @@
+{
+  "SwaggerEndPoints": [
+    {
+      "Key": "managementweb",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "Management.Web",
+          "Version": "v1.0",
+          "Url": "https://localhost:7252/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "policy",
+      "Config": [
+        {
+          "Name": "Policy.Api",
+          "Version": "v1.0",
+          "Url": "https://localhost:7252/policy/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "user",
+      "Config": [
+        {
+          "Name": "User.Api",
+          "Version": "v1.0",
+          "Url": "https://localhost:7252/user/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
+}
