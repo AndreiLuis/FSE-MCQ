@@ -2,7 +2,13 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
 new WebHostBuilder()
-            .UseKestrel()
+            .UseKestrel(options =>
+            {
+                options.ListenAnyIP(443, listenOptions =>
+                {
+                    listenOptions.UseHttps("aspnetapp.pfx", "crypticpassword");
+                });
+            })
             .UseContentRoot(Directory.GetCurrentDirectory())
             .ConfigureAppConfiguration((hostingContext, config) =>
             {
@@ -15,6 +21,7 @@ new WebHostBuilder()
             })
             .ConfigureServices(s => {
                 s.AddOcelot();
+                //s.AddSwaggerForOcelot(s.Configuration);
             })
             .ConfigureLogging((hostingContext, logging) =>
             {
@@ -24,6 +31,10 @@ new WebHostBuilder()
             .Configure(app =>
             {
                 app.UseOcelot().Wait();
+                app.UseSwaggerForOcelotUI(opt =>
+                {
+                    opt.PathToSwaggerGenerator = "/swagger/docs";
+                });
             })
             .Build()
             .Run();

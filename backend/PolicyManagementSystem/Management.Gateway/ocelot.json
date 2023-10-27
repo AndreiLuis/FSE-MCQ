@@ -1,31 +1,53 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/policy/{version}/{everything}",
+      "DownstreamPathTemplate": "/api/v1.0/policy/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 32778
+          "Host": "Policy.Api",
+          "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/gateway/policy{version}/{everything}",
-      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
+      "UpstreamPathTemplate": "/gateway/v1.0/policy/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ],
+      "SwaggerKey": "policy"
     },
     {
-      "DownstreamPathTemplate": "/api/user/{version}/{everything}",
+      "DownstreamPathTemplate": "/api/v1.0/user/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 32774
+          "Host": "User.Api",
+          "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/gateway/user/{version}/{everything}",
-      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
+      "UpstreamPathTemplate": "/gateway/v1.0/user/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ],
+      "SwaggerKey": "user"
     }
   ],
-  "GlobalConfiguration": {
-    "BaseURI": "https://localhost:32776"
-  }                                                                                 
+  "SwaggerEndPoints": [
+    {
+      "Key": "policy",
+      "Config": [
+        {
+          "Name": "Policy.Api",
+          "Version": "v1.0",
+          "Url": "https://localhost:32784/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "user",
+      "Config": [
+        {
+          "Name": "User.Api",
+          "Version": "v1.0",
+          "Url": "https://localhost:32786/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ],
+  "GlobalConfiguration": {}
 }
