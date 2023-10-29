@@ -10,15 +10,15 @@ namespace Policy.Domain.Entities
 {
     public class PolicyEntity
     {
-        public string PolicyId { get; set; }
-        public string PolicyName { get; set; }
+        public string? PolicyId { get; set; }
+        public string? PolicyName { get; set; }
         public DateTime StartDate { get; set; }
         /// <summary>
         /// Duration in years
         /// </summary>
         public int Duration { get; set; }
-        public string Company { get; set; }
-        public string InitialDeposit { get; set; }
+        public string? Company { get; set; }
+        public string? InitialDeposit { get; set; }
         public PolicyType PolicyType { get; set; }
         public UserType UserType { get; set; }
         public int TermsPerYear { get; set; }
