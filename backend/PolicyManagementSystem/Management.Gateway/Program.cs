@@ -28,8 +28,10 @@ new WebHostBuilder()
             })
             .ConfigureServices(service => {
                 service.AddOcelot();
+#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
                 service.AddSwaggerForOcelot(service.BuildServiceProvider().GetService<IConfiguration>());
-                //service.AddSwaggerGen();
+#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
+                               //service.AddSwaggerGen();
                 service.AddMvcCore().AddApiExplorer();
             })
             .ConfigureLogging((hostingContext, logging) =>

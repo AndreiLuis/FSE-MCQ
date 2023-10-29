@@ -14,11 +14,4 @@
     <PackageReference Include="Ocelot" Version="19.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Policy.Api\Policy.Api.csproj" />
-    <ProjectReference Include="..\PolicyManagement.Policy\Policy.Api.csproj" />
-    <ProjectReference Include="..\PolicyManagement.User\User.Api.csproj" />
-    <ProjectReference Include="..\User.Api\User.Api.csproj" />
-  </ItemGroup>
-
 </Project>

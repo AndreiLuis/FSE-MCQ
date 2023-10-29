@@ -10,10 +10,10 @@ namespace Policy.Repository.Repositories
 {
     public abstract class Repository
     {
-        protected readonly SqlCommand _command;
-        protected readonly SqlConnection _connection;
-        protected readonly SqlDataAdapter _sqlAdapter;
-        protected readonly DataTable _dataTable;
+        //protected readonly SqlCommand _command;
+        //protected readonly SqlConnection _connection;
+        //protected readonly SqlDataAdapter _sqlAdapter;
+        //protected readonly DataTable _dataTable;
 
         protected Repository()
         {
@@ -21,5 +21,7 @@ namespace Policy.Repository.Repositories
         }
 
         protected string ConnectonString { get; set; }
+
+
     }
 }

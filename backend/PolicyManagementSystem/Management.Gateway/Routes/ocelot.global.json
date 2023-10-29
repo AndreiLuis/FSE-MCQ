@@ -1,5 +1,5 @@
 {
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7252"
+    "BaseUrl": "https://localhost"
   }
 }
