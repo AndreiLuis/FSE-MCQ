@@ -6,7 +6,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "Policy.Api",
-          "Port": 7055
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/gateway/v1.0/policy/{everything}",

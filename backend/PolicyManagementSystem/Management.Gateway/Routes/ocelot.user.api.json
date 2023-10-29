@@ -6,7 +6,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "User.Api",
-          "Port": 7147
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/gateway/v1.0/user/{everything}",
