@@ -5,8 +5,8 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "User.Api",
-          "Port": 443
+          "Host": "localhost",
+          "Port": 32820
         }
       ],
       "UpstreamPathTemplate": "/gateway/v1.0/user/{everything}",

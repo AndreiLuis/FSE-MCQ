@@ -5,8 +5,8 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "Policy.Api",
-          "Port": 443
+          "Host": "localhost",
+          "Port": 32818
         }
       ],
       "UpstreamPathTemplate": "/gateway/v1.0/policy/{everything}",

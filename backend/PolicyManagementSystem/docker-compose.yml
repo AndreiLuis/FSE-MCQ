@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  management.gateway:
+    image: ${DOCKER_REGISTRY-}managementgateway
+    build:
+      context: .
+      dockerfile: Management.Gateway/Dockerfile
+
+  policy.api:
+    image: ${DOCKER_REGISTRY-}policyapi
+    build:
+      context: .
+      dockerfile: Policy.Api/Dockerfile
+
+
+  user.api:
+    image: ${DOCKER_REGISTRY-}userapi
+    build:
+      context: .
+      dockerfile: User.Api/Dockerfile
+

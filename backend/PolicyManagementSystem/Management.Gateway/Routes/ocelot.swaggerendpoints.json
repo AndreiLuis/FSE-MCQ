@@ -7,7 +7,7 @@
         {
           "Name": "Management.Web",
           "Version": "v1.0",
-          "Url": "https://localhost:7252/swagger/v1/swagger.json"
+          "Url": "https://localhost:32822/swagger/v1/swagger.json"
         }
       ]
     },
@@ -17,7 +17,7 @@
         {
           "Name": "Policy.Api",
           "Version": "v1.0",
-          "Url": "https://localhost:7252/policy/swagger/v1/swagger.json"
+          "Url": "https://localhost:32822/policy/swagger/v1/swagger.json"
         }
       ]
     },
@@ -27,7 +27,7 @@
         {
           "Name": "User.Api",
           "Version": "v1.0",
-          "Url": "https://localhost:7252/user/swagger/v1/swagger.json"
+          "Url": "https://localhost:32822/user/swagger/v1/swagger.json"
         }
       ]
     }
