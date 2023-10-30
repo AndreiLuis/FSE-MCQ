@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using MMLib.SwaggerForOcelot.DependencyInjection;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Ocelot.Values;
@@ -19,20 +18,11 @@ new WebHostBuilder()
                     .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
                     .AddJsonFile("appsettings.json", true, true)
                     .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
-                    //.AddJsonFile("ocelot.json")
-                    .AddEnvironmentVariables()
-                    .AddOcelotWithSwaggerSupport(option =>
-                    {
-                        option.Folder = "Routes";
-                    });
+                    .AddJsonFile("ocelot.json")
+                    .AddEnvironmentVariables();
             })
-            .ConfigureServices(service => {
-                service.AddOcelot();
-#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
-                service.AddSwaggerForOcelot(service.BuildServiceProvider().GetService<IConfiguration>());
-#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
-                               //service.AddSwaggerGen();
-                service.AddMvcCore().AddApiExplorer();
+            .ConfigureServices(s => {
+                s.AddOcelot();
             })
             .ConfigureLogging((hostingContext, logging) =>
             {
@@ -42,10 +32,6 @@ new WebHostBuilder()
             .Configure(app =>
             {
                 app.UseOcelot().Wait();
-                app.UseSwaggerForOcelotUI(option =>
-                {
-                    option.PathToSwaggerGenerator = "/swagger/docs";
-                });
             })
             .Build()
             .Run();

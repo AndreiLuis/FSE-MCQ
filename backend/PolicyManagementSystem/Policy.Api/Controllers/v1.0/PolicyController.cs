@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Confluent.Kafka;
+using Microsoft.AspNetCore.Mvc;
 using Policy.Domain.Entities;
 using Policy.Domain.Utilities;
 using Policy.Service.Role;
+using Serilog;
+using static Confluent.Kafka.ConfigPropertyNames;
 
 namespace Policy.Api.Controllers.v1._0
 {
@@ -9,11 +12,12 @@ namespace Policy.Api.Controllers.v1._0
     [ApiController]
     public class PolicyController : ControllerBase
     {
-        private readonly ILogger _logger;
         private readonly IPolicyService _policyService;
-        public PolicyController(ILogger<PolicyController> logger, IPolicyService policyService)
+
+        private ProducerConfig config = new ProducerConfig { BootstrapServers = "localhost:9092" };
+        
+        public PolicyController(IPolicyService policyService)
         {
-            _logger = logger;
             _policyService = policyService;
         }
 
@@ -21,6 +25,8 @@ namespace Policy.Api.Controllers.v1._0
         [Route("register")]
         public IActionResult Register(PolicyEntity policy)
         {
+            var producer = new ProducerBuilder<Null, string>(config).Build();
+
             try
             {
                 _policyService.Register(policy);
@@ -33,11 +39,10 @@ namespace Policy.Api.Controllers.v1._0
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(
-                    LogEventsUtility.Error, ex, "ERROR WHEN REGISTER A POLICY: \n" + ex.Message);
-
-                return BadRequest("ERROR WHEN REGISTER A POLICY: \n" +
-                    "Please contact the server admin");
+                var logMessage = "ERROR WHEN REGISTER A POLICY: \n" + ex.Message;
+                Log.Error(ex, logMessage);
+                producer.Produce("logstash-topic", new Message<Null, string> { Value = logMessage }); 
+                return BadRequest("ERROR WHEN REGISTER A POLICY: \n" + "Please contact the server admin");
             }
 
         }
@@ -46,6 +51,8 @@ namespace Policy.Api.Controllers.v1._0
         [Route("getall")]
         public IActionResult GetAll()
         {
+            var producer = new ProducerBuilder<Null, string>(config).Build();
+
             try
             {
                 var result = _policyService.GetAll();
@@ -58,10 +65,10 @@ namespace Policy.Api.Controllers.v1._0
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(
-                    LogEventsUtility.Error, ex, "ERROR WHEN LIST A POLICY: \n" + ex.Message);
-
-                return BadRequest("ERROR WHEN SEARCH A POLICY: \n" +
+                var logMessage = "ERROR WHEN LIST A POLICY: \n" + ex.Message;
+                Log.Error(ex, logMessage);
+                producer.Produce("logstash-topic", new Message<Null, string> { Value = logMessage });
+                return BadRequest("ERROR WHEN LIST A POLICY: \n" +
                     "Please contact the server admin");
             }
         }
@@ -70,6 +77,8 @@ namespace Policy.Api.Controllers.v1._0
         [Route("searches")]
         public IActionResult Searches(dynamic filter)
         {
+            var producer = new ProducerBuilder<Null, string>(config).Build();
+
             try
             {
                 var result = _policyService.Searches(filter);
@@ -82,9 +91,9 @@ namespace Policy.Api.Controllers.v1._0
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(
-                    LogEventsUtility.Error, ex, "ERROR WHEN SEARCH A POLICY: \n" + ex.Message);
-
+                var logMessage = "ERROR WHEN SEARCH A POLICY:\n" + ex.Message;
+                Log.Error(ex, logMessage);
+                producer.Produce("logstash-topic", new Message<Null, string> { Value = logMessage });
                 return BadRequest("ERROR WHEN SEARCH A POLICY: \n" +
                     "Please contact the server admin");
             }
