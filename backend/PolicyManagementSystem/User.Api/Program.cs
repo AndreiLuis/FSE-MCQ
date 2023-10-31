@@ -1,9 +1,14 @@
-
+using Serilog;
 using User.Service.Role;
 using User.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .WriteTo.LogstashHttp("http://localhost:5000")
+    .Enrich.FromLogContext());
 //builder.Services.AddScoped<IPolicyService, PolicyService>();
 builder.Services.AddScoped<ICostumerService, CostumerService>();
 // Add services to the container.

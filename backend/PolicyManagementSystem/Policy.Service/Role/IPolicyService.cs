@@ -9,7 +9,7 @@ namespace Policy.Service.Role
 {
     public interface IPolicyService
     {
-        void Register(PolicyEntity policy);
+        string Register(PolicyEntity policy);
         List<PolicyEntity> GetAll();
         List<PolicyEntity> Searches(dynamic filter);
     }

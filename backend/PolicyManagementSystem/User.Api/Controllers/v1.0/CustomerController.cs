@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Policy.Domain.Utilities;
+﻿using Confluent.Kafka;
+using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using User.Domain.Entities;
 using User.Service.Role;
 
@@ -11,12 +12,12 @@ namespace User.Api.Controllers.v1._0
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private readonly ILogger _logger;
         private readonly ICostumerService _costumerService;
 
-        public CustomerController(ILogger<CustomerController> logger, ICostumerService costumerService)
+        private ProducerConfig config = new ProducerConfig { BootstrapServers = "localhost:9092" };
+
+        public CustomerController(ICostumerService costumerService)
         {
-            _logger = logger;
             _costumerService = costumerService;
         }
 
@@ -26,6 +27,8 @@ namespace User.Api.Controllers.v1._0
         [Route("register")]
         public IActionResult Register(CostumerEntity costumer)
         {
+            var producer = new ProducerBuilder<Null, string>(config).Build();
+
             try
             {
                 _costumerService.Register(costumer);
@@ -38,9 +41,9 @@ namespace User.Api.Controllers.v1._0
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(
-                    LogEventsUtility.Error, ex, "ERROR WHEN REGISTER THE COSTUMER: \n" + ex.Message);
-
+                var logMessage = "ERROR WHEN REGISTER THE COSTUMER: \n" + ex.Message;
+                Log.Error(ex, logMessage);
+                producer.Produce("logstash-topic", new Message<Null, string> { Value = logMessage });
                 return BadRequest("ERROR WHEN REGISTER THE COSTUMER: \n" +
                     "Please contact the server admin");
             }

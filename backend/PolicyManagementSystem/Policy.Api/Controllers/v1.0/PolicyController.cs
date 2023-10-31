@@ -1,9 +1,11 @@
 ﻿using Confluent.Kafka;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Policy.Domain.Entities;
 using Policy.Domain.Utilities;
 using Policy.Service.Role;
 using Serilog;
+using System.ComponentModel.DataAnnotations;
 using static Confluent.Kafka.ConfigPropertyNames;
 
 namespace Policy.Api.Controllers.v1._0
@@ -29,10 +31,10 @@ namespace Policy.Api.Controllers.v1._0
 
             try
             {
-                _policyService.Register(policy);
-                return Ok("Registration completed!");
+                var result = _policyService.Register(policy);
+                return Ok(result);
             }
-            catch (ArgumentException ex)
+            catch (ValidationException ex)
             {
                 return BadRequest("ERROR WHEN REGISTER A POLICY: \n" +
                     ex.Message);
@@ -58,7 +60,7 @@ namespace Policy.Api.Controllers.v1._0
                 var result = _policyService.GetAll();
                 return Ok(result);
             }
-            catch(ArgumentException ex)
+            catch(ValidationException ex)
             {
                 return BadRequest("ERROR WHEN LIST A POLICY: \n"+
                     ex.Message);
@@ -84,7 +86,7 @@ namespace Policy.Api.Controllers.v1._0
                 var result = _policyService.Searches(filter);
                 return Ok(result);
             }
-            catch (ArgumentException ex)
+            catch (ValidationException ex)
             {
                 return BadRequest("ERROR WHEN SEARCH A POLICY: \n"+
                     ex.Message);

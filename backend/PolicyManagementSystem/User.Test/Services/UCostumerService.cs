@@ -1,20 +1,15 @@
-using User.Domain.Entities;
+﻿using User.Domain.Entities;
 using User.Domain.Types;
 using User.Service.Services;
 
-namespace User.Test
+namespace User.Test.Services
 {
-    public class Tests
+    internal class UCostumerService
     {
+
         [SetUp]
         public void Setup()
         {
-        }
-
-        [Test]
-        public void Test1()
-        {
-            Assert.Pass();
         }
 
         [Test]
@@ -31,16 +26,22 @@ namespace User.Test
                 EmailAddress = "testuser@example.com",
                 Salary = 1000.0m,
                 PanNumber = 123456789,
-                EmployerType = EmployerType.Corporations, // Use the appropriate value
+                EmployerType = EmployerType.Corporations,
                 EmployerName = "Test Employer"
             };
 
             // Act
             Assert.DoesNotThrow(() => new CostumerService().Register(costumer));
-
-            // Assert
-            // Here you should add code to retrieve the inserted record from the database and verify it matches the 'costumer' object.
         }
 
+        [Test]
+        public void RegisterCostumerError()
+        {
+            // Arrange
+            CostumerEntity costumer = new CostumerEntity();
+
+            // Act
+            Assert.Throws<Exception>(() => new CostumerService().Register(costumer));
+        }
     }
 }

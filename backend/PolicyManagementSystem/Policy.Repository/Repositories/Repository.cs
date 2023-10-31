@@ -10,14 +10,13 @@ namespace Policy.Repository.Repositories
 {
     public abstract class Repository
     {
-        protected SqlConnection _connection;
-        protected SqlCommand _command;
-        protected readonly SqlDataAdapter _sqlAdapter;
-        protected readonly DataTable _dataTable;
+        protected SqlConnection? _connection;
+        protected SqlCommand? _command;
+        protected readonly SqlDataAdapter? _sqlAdapter;
 
-        protected string ConnectonString { get; set; }
+        private string ConnectonString { get; set; }
 
-        protected Repository()
+        public Repository()
         {
             ConnectonString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|Policy.Database.mdf;Integrated Security=True";
         }

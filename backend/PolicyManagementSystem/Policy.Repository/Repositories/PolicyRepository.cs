@@ -14,7 +14,7 @@ namespace Policy.Repository.Repositories
 {
     public class PolicyRepository : Repository, IPolicyRepository
     {
-        public void Insert(PolicyEntity policy) 
+        public PolicyEntity Insert(PolicyEntity policy) 
         {
             try
             {
@@ -36,6 +36,8 @@ namespace Policy.Repository.Repositories
                 _command.Parameters.AddWithValue("@Interest", policy.Interest);
                 
                 _command.ExecuteNonQuery();
+
+                return policy;
             }
             catch(SqlException ex)
             {
@@ -43,7 +45,7 @@ namespace Policy.Repository.Repositories
             }
             finally
             {
-                _connection.Close();
+                _connection?.Close();
             }
         }
 
@@ -86,7 +88,7 @@ namespace Policy.Repository.Repositories
             }
             finally
             {
-                _connection.Close();
+                _connection?.Close();
             }
         }
 
@@ -95,15 +97,30 @@ namespace Policy.Repository.Repositories
             try
             {
                 var policies = new List<PolicyEntity>();
-                var query = "SELECT * FROM Policy WHERE Duration = @NumberOfYears AND Company = @Company AND Type = @PolicyType AND Id = @PolicyId AND Name = @PolicyName";
+                var query = new StringBuilder("SELECT * FROM Policy WHERE Id is NOT NULL");
+
                 _connection = GetConnection();
-                _command = new SqlCommand(query, _connection);
+                _command = new SqlCommand();
+                _command.Connection = _connection;
                 _connection.Open();
-                _command.Parameters.AddWithValue("@NumberOfYears", filter.NumberOfYears);
-                _command.Parameters.AddWithValue("@Company", filter.Company);
-                _command.Parameters.AddWithValue("@Type", (int)filter.PolicyType);
-                _command.Parameters.AddWithValue("@Id", filter.PolicyId);
-                _command.Parameters.AddWithValue("@Name", filter.PolicyName);
+
+                if (filter.NumberOfYears != 0)
+                    query.Append(" AND Duration = @NumberOfYears");
+                    _command.Parameters.AddWithValue("@NumberOfYears", filter.NumberOfYears);
+                if (!string.IsNullOrEmpty(filter.Company))
+                    query.Append(" AND Company = @Company");
+                    _command.Parameters.AddWithValue("@Company", filter.Company);
+                if (!string.IsNullOrEmpty(filter.PolicyId))
+                    query.Append(" AND Id = @PolicyId");
+                    _command.Parameters.AddWithValue("@PolicyId", filter.PolicyId);
+                if (!string.IsNullOrEmpty(filter.PolicyName))
+                    query.Append(" AND Name = @PolicyName");
+                    _command.Parameters.AddWithValue("@PolicyName", filter.PolicyName);
+
+                query.Append(" AND Type = @PolicyType");
+                _command.Parameters.AddWithValue("@PolicyType", (int)filter.PolicyType);
+
+                _command.CommandText = query.ToString();
 
                 using (var reader = _command.ExecuteReader())
                 {
@@ -130,14 +147,69 @@ namespace Policy.Repository.Repositories
 
                 return policies;
             }
-            catch(SqlException ex)
+            catch (SqlException ex)
             {
                 throw new Exception(ex.Message, ex);
             }
             finally
             {
-                _connection.Close();
+                _connection?.Close();
             }
         }
+
+        public string GetLastPolicyId()
+        {
+            string? lastPolicyId = null;
+
+            try
+            {
+                _connection = GetConnection();
+                _command = new SqlCommand("SELECT TOP 1 Id FROM Policy ORDER BY Id DESC", _connection);
+
+                _connection.Open();
+
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    lastPolicyId = reader["Id"].ToString();
+                }
+
+                return lastPolicyId;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                _connection?.Close();
+            }
+        }
+
+        public int GetPolicyCreationOrder(string policyId)
+        {
+            try
+            {
+                _connection = GetConnection();
+                _command = new SqlCommand("SELECT COUNT(*) FROM Policy WHERE Id < @Id", _connection);
+                _command.Parameters.AddWithValue("@Id", policyId);
+
+                _connection.Open();
+
+                return (int)_command.ExecuteScalar();
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                _connection?.Close();
+            }
+
+        }
+
+
     }
 }
